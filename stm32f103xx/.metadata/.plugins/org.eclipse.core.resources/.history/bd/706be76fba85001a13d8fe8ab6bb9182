@@ -1,0 +1,115 @@
+/*
+ * stm32f103xx_spi_driver.h
+ *
+ *  Created on: 24 Nis 2020
+ *      Author: ERCAN
+ */
+
+#ifndef INC_STM32F103XX_SPI_DRIVER_H_
+#define INC_STM32F103XX_SPI_DRIVER_H_
+
+#include "stm32f103xx.h"
+
+
+/*
+ * Configuration Structure for SPIx Peripheral
+ */
+typedef struct
+{
+	uint8_t SPI_DeviceMode;
+	uint8_t SPI_BusConfig;
+	uint8_t SPI_SClkSpeed;
+	uint8_t SPI_DFF;
+	uint8_t SPI_CPOL;
+	uint8_t SPI_CPHA;
+	uint8_t SPI_SSM;
+}SPI_Config_t;
+
+
+/*
+ * Handle of Structure for SPIx Peripheral
+ */
+typedef struct
+{
+	SPI_RegDef_t	*pSPIx;			/* hold the base address of SPIx(x:0,1,2) Peripheral */
+	SPI_Config_t	SPIConfig;		/* hold SPIx peripheral configuration settings */
+}SPI_Handle_t;
+
+/*
+ * @SPI_Decice_Mode
+ */
+#define SPI_DEVICE_MODE_SLAVE			0
+#define SPI_DEVICE_MODE_MASTER			1
+
+/*
+ * @SPI_BusConfig
+ */
+#define SPI_BUS_CONFIG_FD				1  		//FULL_DUPLEX
+#define SPI_BUS_CONFIG_HD				2		//HALF_DUPLEX
+#define SPI_BUS_CONFIG_SRX				1		//SIMPLEX_RXONLY
+
+/*
+ * @SPI_SClkSpeed
+ */
+#define SPI_SCLK_SPEED_DIV2				0
+#define SPI_SCLK_SPEED_DIV4				1
+#define SPI_SCLK_SPEED_DIV8				2
+#define SPI_SCLK_SPEED_DIV16			3
+#define SPI_SCLK_SPEED_DIV32			4
+#define SPI_SCLK_SPEED_DIV64			5
+#define SPI_SCLK_SPEED_DIV128			6
+#define SPI_SCLK_SPEED_DIV256			7
+
+/*
+ * @SPI_DFF
+ */
+#define SPI_DFF_8BITS					0
+#define SPI_DFF_16BITS					1
+
+/*
+ * @SPI_CPOL
+ */
+#define SPI_CPOL_LOW					0
+#define SPI_CPOL_HIGH					1
+
+/*
+ * @
+ */
+/*************************************************************************************
+ * 							APIs supported by this driver
+ *								Functions Prototypes
+ ************************************************************************************/
+
+/*
+ * Peripheral Clock Setup
+ */
+void SPI_PClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
+
+
+ /*
+  * İnitializing and De-initializing
+  */
+void SPI_Init(SPI_Handle_t *pSPIHandle);
+void SPI_DeInit(SPI_RegDef_t *pSPIx);
+
+/*
+ * Data Send and Receive
+ */
+void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len );
+void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len );
+
+/*
+ * IRQ (interrupt) Configuration and ISR Handling
+ */
+void SPI_IRQITConfig(uint8_t IRQNumber, uint8_t EnorDi);
+void SPI_IRQPriorityConfig(uint32_t IRQPriority, uint8_t IRQNumber);
+void SPI_IRQHandling(SPI_Handle_t *pHandle);
+
+
+
+
+
+
+
+
+#endif /* INC_STM32F103XX_SPI_DRIVER_H_ */

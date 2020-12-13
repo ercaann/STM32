@@ -1,0 +1,2 @@
+rcc_driver.c:15:10:RCC_PCLK1_GetValue	24	static
+rcc_driver.c:52:10:RCC_PCLK2_GetValue	24	static

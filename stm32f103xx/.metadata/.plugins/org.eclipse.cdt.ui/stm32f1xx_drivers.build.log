@@ -1,0 +1,20 @@
+01:17:02 **** Incremental Build of configuration Debug for project stm32f1xx_drivers ****
+make -j8 all 
+arm-none-eabi-gcc "../Src/uart_tx.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I"C:/Embedded Software/code/stm32f1xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/uart_tx.d" -MT"Src/uart_tx.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Src/uart_tx.o"
+arm-none-eabi-gcc -o "stm32f1xx_drivers.elf" @"objects.list"   -mcpu=cortex-m3 -T"C:\Embedded Software\code\stm32f1xx_drivers\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f1xx_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: stm32f1xx_drivers.elf
+ 
+arm-none-eabi-objdump -h -S  stm32f1xx_drivers.elf  > "stm32f1xx_drivers.list"
+arm-none-eabi-objcopy  -O binary  stm32f1xx_drivers.elf  "stm32f1xx_drivers.bin"
+arm-none-eabi-size   stm32f1xx_drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+   4236	   1028	   1604	   6868	   1ad4	stm32f1xx_drivers.elf
+Finished building: default.size.stdout
+ 
+Finished building: stm32f1xx_drivers.bin
+ 
+Finished building: stm32f1xx_drivers.list
+ 
+
+01:17:03 Build Finished. 0 errors, 0 warnings. (took 892ms)
+

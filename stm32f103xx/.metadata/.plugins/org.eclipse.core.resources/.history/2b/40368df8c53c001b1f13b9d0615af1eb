@@ -1,0 +1,172 @@
+/*
+ * stm32f103xx_usart_driver.h
+ *
+ *  Created on: 25 May 2020
+ *      Author: ERCAN
+ */
+
+#ifndef INC_USART_DRIVER_H_
+#define INC_USART_DRIVER_H_
+
+#include <stm32f103xx.h>
+
+/*
+ * Configuration structure for USARTx peripheral
+ */
+
+typedef struct
+{
+	uint8_t USART_Mode;
+	uint8_t USART_BaudRate;
+	uint8_t USART_StopBits;
+	uint8_t USART_WordLength;
+	uint8_t USART_Parity;
+	uint8_t USART_HwFlowCtl;
+	uint8_t USART_OverSampling;
+}USART_Config_t;
+
+/*
+ * Handle structure for USARTx peripheral
+ */
+
+typedef struct
+{
+	USART_RegDef_t 	*pUSARTx;
+	USART_Config_t 	USART_Config;
+	uint8_t 		*pTxBuffer; 	/*!< To store the app. Tx buffer address 	>*/
+	uint8_t 		*pRxBuffer;		/*!< To store the app. Rx buffer address 	>*/
+	uint32_t 		TxLen;			/*!< To store Tx len 						>*/
+	uint32_t 		RxLen;			/*!< To store Rx len 						>*/
+	uint8_t 		TxState;		/*!< To store Communication state 			>*/
+	uint8_t 		RxState;		/*!< To store Communication state 			>*/
+}USART_Handle_t;
+
+/*
+ * @USART_Mode
+ */
+#define USART_MODE_TX				0
+#define USART_MODE_RX				1
+#define USART_MODE_TXRX				2
+
+/*
+ * @USART_BaudRate
+ */
+#define USART_BAUDRATE_2400			2400
+#define USART_BAUDRATE_9600			9600
+#define USART_BAUDRATE_19200		19200
+#define USART_BAUDRATE_57600		57600
+#define USART_BAUDRATE_115200		115200
+#define USART_BAUDRATE_230400		230400
+#define USART_BAUDRATE_460800		460800
+#define USART_BAUDRATE_921600		921600
+#define USART_BAUDRATE_2M			2250000
+
+/*
+ * @USART_StopBits
+ */
+#define USART_STOPBITS_1			0
+#define USART_STOPBITS_0_5			1
+#define USART_STOPBITS_2			2
+#define USART_STOPBITS_1_5			3
+
+/*
+ * @USART_WordLength
+ */
+#define USART_WORD_8BITS			0
+#define USART_WORD_9BITS			1
+
+/*
+ * @USART_Parity
+ */
+#define USART_PARITY_EVEN			1
+#define USART_PARITY_ODD			2
+#define USART_PARITY_DISABLE		0
+
+/*
+ * @USART_HwFlowCtl
+ */
+#define USART_HWFLOWCTL_NONE		0
+#define USART_HWFLOWCTL_CTS			1
+#define USART_HWFLOWCTL_RTS			2
+#define USART_HWFLOWCTL_CTS_RTS		3
+
+/*
+ * @USART_OverSampling;
+*
+#define USART_OVERSAMPLING_8		0
+#define USART_OVERSAMPLING_16		1 */
+
+/*
+ * USART Flags
+ */
+#define USART_FLAG_TXE				(1<< USART_SR_TXE)
+#define USART_FLAG_RXNE				(1<< USART_SR_RXNE)
+#define USART_FLAG_TC				(1<< USART_SR_TC)
+
+#define USART_EVENT_TX		  			0
+#define	USART_EVENT_RX		   			1
+#define	USART_EVENT_IDLE    	   		2
+#define	USART_EVENT_CTS   	     		3
+#define	USART_EVENT_PARITY         		4
+#define USART_EVENT_BREAK				5
+#define	USART_ERR_FE     	  			6
+#define	USART_ERR_NE    	  			7
+#define	USART_ERR_ORE    	  			8
+
+/*
+ * USARTx states
+ */
+typedef enum{
+	USART_READY = 0,
+	USART_BUSY_RX = 1,
+	USART_BUSY_TX = 2
+}USART_StatusTypeDef;
+
+/*************************************************************************************
+ * 							APIs supported by this driver
+ *								Functions Prototypes
+ ************************************************************************************/
+
+/*
+ * Peripheral Clock Setup
+ */
+void USART_PClockControl(USART_RegDef_t *pUSARTx, uint8_t EnorDi);
+
+/*
+  * İnitializing and De-initializing
+  */
+void USART_Init(USART_Handle_t *pUSARTHandle);
+void USART_DeInit(USART_RegDef_t *pUSARTx);
+
+/*
+ * Send and Receive Data
+ */
+void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxbuffer, uint32_t Len);
+void USART_ReceiveData(USART_Handle_t *pUSARTHandle, uint8_t *pRxbuffer, uint32_t Len);
+USART_StatusTypeDef USART_SendDataIT(USART_Handle_t *pUSARTHandle, uint8_t *pTxbuffer, uint32_t Len);
+USART_StatusTypeDef USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle, uint8_t *pRxbuffer, uint32_t Len);
+
+
+/*
+ * IRQ (interrupt) Configuration and ISR Handling
+ */
+void USART_IRQITConfig(uint8_t IRQNumber, uint8_t EnorDi);
+void USART_IRQPriorityConfig(uint32_t IRQPriority, uint8_t IRQNumber);
+void USART_EVENT_IRQHandling(USART_Handle_t *pUSARTHandle);
+
+/*
+ * other function type for Peripheral Control
+ */
+void USART_SetBaudRate(USART_RegDef_t *pUSARTx, uint32_t BaudRate);
+uint8_t USART_GetFlagStatus(USART_RegDef_t *pUSARTx , uint32_t FlagName);
+void USART_PeripheralControl(USART_RegDef_t *pUSARTx, uint8_t EnOrDi);
+
+/*
+ * Application callback
+ */
+void USART_ApplicationEventCallback(USART_Handle_t *pUSARTHandle, uint8_t AppEv);
+
+
+
+
+#endif /* INC_USART_DRIVER_H_ */
